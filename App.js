@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from "react";
 import { View, Text } from "react-native";
 import socket from "./socket";
+import Message from "./src/components/Form/Message";
 
 export default function App() {
   const [message, setMessage] = useState('');
@@ -22,7 +23,7 @@ export default function App() {
 
   return (
     <View style={{flex:1, justifyContent: "center", alignItems: "center"}}>
-      <Text>Mensagem do servidor: {message}</Text>
+      <Message></Message>
     </View>
   );
 }
