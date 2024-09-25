@@ -8,9 +8,10 @@ export default function Message() {
     const [messageList, setMessageList] = useState([])
 
     function sendMessage() {
-        console.log("entrou na sendMessage")
+        console.log("entrou na sendMessage");
 
-        setMessageList{(arr) => [...arr, message]};
+        // setMessageList{(arr) => [...arr, message]};
+        setMessageList((arr) => [...arr, message]);
 
         setMessageList("")
     }
