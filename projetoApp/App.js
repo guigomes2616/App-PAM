@@ -1,30 +1,38 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, Pressable, StyleSheet } from "react-native";
-import { TextInput } from "react-native-web";
+import { View, Text, Pressable, StyleSheet, TextInput } from "react-native";
 import socket from './socket';
 
 export default function App() {
-
   const [room, setRoom] = useState('default');
   const [message, setMessage] = useState('');
   const [receivedMessage, setReceivedMessage] = useState('');
 
   const sendMessage = () => {
-    socket.emit('send_message', {room, message});
-    setMessage('');
+    if (message.trim()) {
+      socket.emit('send_message', { room, message });
+      console.log(`Mensagem enviada: ${message}`); // Log da mensagem enviada
+      setMessage('');
+    } else {
+      console.log('Mensagem vazia, não enviada'); // Log se a mensagem estiver vazia
+    }
   };
 
   useEffect(() => {
     socket.emit('join_room', room);
+    
+    socket.on('connect', () => {
+      console.log('Conectado ao servidor'); // Log de conexão
+    });
 
     socket.on('receive_message', (msg) => {
-      setReceivedMessage(msg)
+      setReceivedMessage(msg);
+      console.log(`Mensagem recebida: ${msg}`); // Log da mensagem recebida
     });
 
     return () => {
-      socket.off('receive_message')
-    }
-  }, [room])
+      socket.off('receive_message');
+    };
+  }, [room]);
 
   return (
     <View style={styles.container}>
@@ -41,8 +49,10 @@ export default function App() {
         <Text style={styles.buttonText}>Enviar mensagem</Text>
       </Pressable>
 
-      <Text style={styles.receivedMessageTitle}>Mensagem recebida: </Text>
-      <Text style={styles.receivedMessage}>{ receivedMessage || 'Nenhuma mensagem recebida'}</Text>
+      <Text style={styles.receivedMessageTitle}>Mensagem recebida:</Text>
+      <Text style={styles.receivedMessage}>
+        {receivedMessage || 'Nenhuma mensagem recebida'}
+      </Text>
     </View>
   );
 }
@@ -52,13 +62,13 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#f4f4f4',
     padding: 20,
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   title: {
     fontSize: 20,
     fontWeight: 'bold',
     marginBottom: 20,
-    textAlign: 'center'
+    textAlign: 'center',
   },
   input: {
     height: 50,
@@ -79,7 +89,7 @@ const styles = StyleSheet.create({
   buttonText: {
     color: '#fff',
     fontSize: 16,
-    fontWeight: 'bold'
+    fontWeight: 'bold',
   },
   receivedMessage: {
     fontSize: 16,
@@ -88,7 +98,7 @@ const styles = StyleSheet.create({
     padding: 10,
     backgroundColor: '#e8e8e8',
     borderRadius: 5,
-    textAlign: 'center'
+    textAlign: 'center',
   },
   receivedMessageTitle: {
     fontSize: 16,
@@ -96,5 +106,4 @@ const styles = StyleSheet.create({
     marginTop: 20,
     textAlign: 'center',
   },
-
-})
+});

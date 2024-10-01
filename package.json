@@ -1,6 +1,11 @@
 {
   "dependencies": {
+    "@expo/metro-runtime": "~3.2.3",
+    "expo": "^51.0.35",
     "express": "^4.21.0",
-    "socket.io": "^4.8.0"
+    "react-dom": "18.2.0",
+    "react-native-web": "~0.19.10",
+    "socket.io": "^4.8.0",
+    "socket.io-client": "^4.8.0"
   }
 }
